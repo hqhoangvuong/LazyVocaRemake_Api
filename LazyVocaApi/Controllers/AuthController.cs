@@ -37,11 +37,31 @@ namespace LazyVocaApi.Controllers
                 return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
+                    tokenType = "Bearer",
+                    expiresIn = TimeSpan.FromDays(30).TotalSeconds,
                     User = loggedUser
                 });
             }
 
             return Unauthorized();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> CreateUser([FromBody] RegisterRequest newUser)
+        {
+            if (string.IsNullOrEmpty(newUser.UserName) || string.IsNullOrEmpty(newUser.Password))
+            {
+                return BadRequest();
+            }
+
+            if (await _usersService.CheckDuplicateAsync(newUser.UserName))
+            {
+                return Conflict();
+            }
+
+            await _usersService.CreateAsync(newUser.UserName, newUser.Password);
+
+            return NoContent();
         }
 
         private JwtSecurityToken GetToken(string name)

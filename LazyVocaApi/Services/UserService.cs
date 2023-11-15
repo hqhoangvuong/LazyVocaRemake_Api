@@ -43,5 +43,25 @@ namespace LazyVocaApi.Services
 
         public async Task RemoveAsync(string id) =>
             await _usersCollection.DeleteOneAsync(x => x.Id == id);
+
+        public async Task CreateAsync(string username, string password)
+        {
+            var newUser = new User
+            {
+                UserName = username,
+                Password = password,
+                RegistrerDate = DateTime.UtcNow,
+                LastModified = DateTime.UtcNow
+            };
+
+            await _usersCollection.InsertOneAsync(newUser);
+        }
+
+        public async Task<bool> CheckDuplicateAsync(string username)
+        {
+            var count = await _usersCollection.CountDocumentsAsync(x => x.UserName == username);
+
+            return count != 0 ? true : false;
+        }
     }
 }

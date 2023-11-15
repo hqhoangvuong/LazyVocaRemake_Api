@@ -1,13 +1,14 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.IdGenerators;
 
 namespace LazyVocaApi.Models
 {
     public class Vocabulary
     {
-        [BsonId]
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
+        public string Id { get; set; }
 
         public string UserId { get; set; } = string.Empty;
 

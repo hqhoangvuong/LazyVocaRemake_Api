@@ -1,5 +1,5 @@
-﻿using LazyVocaApi.Models;
-using MongoDB.Driver.GeoJsonObjectModel;
+﻿using LazyVocaApi.Entities;
+using LazyVocaApi.Models;
 
 namespace LazyVocaApi.Services
 {
@@ -14,6 +14,10 @@ namespace LazyVocaApi.Services
             string password);
 
         Task CreateAsync(User newUser);
+
+        Task CreateAsync(string username, string password);
+
+        Task<bool> CheckDuplicateAsync(string username);
 
         Task UpdateAsync(
             string id,
